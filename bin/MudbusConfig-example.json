@@ -1,0 +1,47 @@
+
+
+
+
+//modbus 配置
+[
+	{
+		"id": "string-唯一标识",
+		"slaveId":"byte-从机号",
+		"tcp": {
+			"address": "string-通讯地址:端口"
+		},
+		"serial": {
+			"address": "string-串口地址",
+			"baudrate": "int-19200",
+			"dataBits": "int-7|8",
+			"stopBits": "int-1|2",
+			"parity": "string-even|odd|none",
+			"blocking": "string-on|off",
+			"autocts": "string-on|off"
+		},
+		"areas": [
+			{
+				"id":"string-唯一标识",
+				"area": "int-1:线圈 2:离散输入;3:保持寄存器;4:输入寄存器		1|2:按位取值   3|4:按双字节取值",
+				"start": "int-起始地址  从0开始",
+				"amount": "int-读取数量  area为1或者2时1~200； 其他1~125"
+			}
+		]
+	}
+]
+
+//modbus持久化
+[
+	{
+		"id": "string-唯一标识与配置项对应",
+		"areas": [
+			{
+				"id":"string-唯一标识  与配置项对应",
+				"data": "string-十六进制字符串  持久化数据"
+			}
+		]
+	}
+]
+
+
+

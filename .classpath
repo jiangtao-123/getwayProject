@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="res"/>
+	<classpathentry kind="con" path="org.elipse.mtj.JavaMEContainer/Josh Device SDK/JOSH_Smart_Gateway_E9500"/>
+	<classpathentry kind="lib" path="lib/JoshJson.jar"/>
+	<classpathentry kind="lib" path="lib/JoshPahoMqtt.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

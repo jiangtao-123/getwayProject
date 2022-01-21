@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mtjMetadata jad="EdgeStudio.jad" version="2.0.1.202109130736">
+   <device group="Josh Device SDK" name="JOSH_Smart_Gateway_E9500"/>
+   <signing projectSpecific="false" signProject="false">
+      <alias/>
+   </signing>
+   <configurations>
+      <configuration active="true" name="JOSH_Smart_Gateway_E9500">
+         <device group="Josh Device SDK" name="JOSH_Smart_Gateway_E9500"/>
+         <symbolSet name="JOSH_Smart_Gateway_E9500">
+            <symbol name="apis.supported" value="CLDC-1.1.1,JOSHVM-1.0,WMA-1.1,JSR75-1.0,JOSHCellular-1.0,JOSHUtil-1.0,JOSHDIO-1.0,GCF-1.0,JSR179-1.0,DirectUI-1.0,CryptoAPI-1.0,XMLAPI-1.0,JOSHRemote-1.0"/>
+            <symbol name="version.configuration" value="CLDC-1.1.1"/>
+            <symbol name="WMA" value="1.1"/>
+            <symbol name="GCF" value="1.0"/>
+            <symbol name="JOSHRemote" value="1.0"/>
+            <symbol name="descriptor" value="JOSH Gateway Device"/>
+            <symbol name="JOSHCellular" value="1.0"/>
+            <symbol name="JSR179" value="1.0"/>
+            <symbol name="JOSHCrypto" value="1.0"/>
+            <symbol name="CLDC" value="1.1"/>
+            <symbol name="JOSHVM" value="1.0"/>
+            <symbol name="JOSHDirectUI" value="1.0"/>
+            <symbol name="JOSHUtil" value="1.0"/>
+            <symbol name="JSR75" value="1.0"/>
+            <symbol name="JOSHDIO" value="1.0"/>
+            <symbol name="JSR280" value="1.0"/>
+         </symbolSet>
+      </configuration>
+   </configurations>
+   <liblets/>
+</mtjMetadata>

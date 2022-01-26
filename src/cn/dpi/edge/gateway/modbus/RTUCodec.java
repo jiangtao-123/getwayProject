@@ -76,7 +76,7 @@ public class RTUCodec extends ModbusCodec {
 		ModbusPDU pdu = new ModbusPDU();
 		pdu.FunctionCode = ModbusFunctionCode.from(adu[1]);
 		pdu.Data = new byte[length - 4];
-		arrayUtil.copy(adu, 2, pdu.Data, 0);
+		arrayUtil.copy(adu, 2, pdu.Data, 0,pdu.Data.length);
 		return pdu;
 	}
 

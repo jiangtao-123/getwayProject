@@ -1,5 +1,6 @@
 package cn.dpi.edge.gateway.service;
 
+import org.joshvm.util.ArrayList;
 import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
@@ -21,26 +22,26 @@ public class ModbusConfig implements JSONSerializable, DataConvert {
 	public byte slaveId;
 	public ModbusTCPConfig tcp;
 	public ModbusSerialConfig serial;
-	public ModbusArea[] areas;
-
+	public ArrayList areas;
+ArrayList modbusConfigList=new ArrayList();
 	public static void main(String[] args) throws JSONException {
 		ModbusConfig c = new ModbusConfig();
 		c.id = "1";
 		c.tcp = new ModbusTCPConfig();
-		c.tcp.address = "127.0.0.1:8008";
-		c.areas = new ModbusArea[2];
+		c.tcp.address = "127.0.0.1:502";
+		c.areas = new ArrayList();
 		ModbusArea area = new ModbusArea();
 		area.id = "1";
 		area.area = 1;
 		area.start = 0;
 		area.amount = 8;
-		c.areas[0] = area;
+		c.areas.add(area);
 		area = new ModbusArea();
 		area.id = "2";
 		area.area = 1;
 		area.start = 8;
 		area.amount = 8;
-		c.areas[1] = area;
+		c.areas.add(area);
 		System.out.println(c.toJson());
 	}
 
@@ -55,10 +56,10 @@ public class ModbusConfig implements JSONSerializable, DataConvert {
 		}
 		if (areas != null) {
 			JSONArray array = new JSONArray();
-			for (int i = 0; i < areas.length; i++) {
-				ModbusArea area = areas[i];
+			for (int i = 0; i < areas.size(); i++) {
+				ModbusArea area = (ModbusArea) areas.get(i);
 				if (area != null) {
-					array.put(areas[i].toJson());
+					array.put(((ModbusArea)areas.get(i)).toJson());
 				}
 			}
 			j.put("areas", array);
@@ -80,10 +81,11 @@ public class ModbusConfig implements JSONSerializable, DataConvert {
 		}
 		JSONArray array = json.getJSONArray("areas");
 		if (array != null) {
-			this.areas = new ModbusArea[array.length()];
+			this.areas = new ArrayList();
 			for (int i = 0; i < array.length(); i++) {
-				areas[i] = new ModbusArea();
-				areas[i].parse(array.getJSONObject(i));
+				ModbusArea modbusArea = new ModbusArea();
+				modbusArea.parse(array.getJSONObject(i));
+				this.areas.add(modbusArea);
 			}
 		}
 	}
@@ -93,10 +95,10 @@ public class ModbusConfig implements JSONSerializable, DataConvert {
 		j.put("id", id);
 		if (areas != null) {
 			JSONArray array = new JSONArray();
-			for (int i = 0; i < areas.length; i++) {
-				ModbusArea area = areas[i];
+			for (int i = 0; i < areas.size(); i++) {
+				ModbusArea area = (ModbusArea) areas.get(i);
 				if (area != null) {
-					array.put(areas[i].toData());
+					array.put(((ModbusArea)areas.get(i)).toData());
 				}
 			}
 			j.put("areas", array);
@@ -128,5 +130,39 @@ public class ModbusConfig implements JSONSerializable, DataConvert {
 			return transport;
 		}
 		throw new RuntimeException("modbus config error");
+	}
+
+	public static ArrayList parse(JSONArray jsonArray) throws JSONException {
+		// TODO Auto-generated method stub
+		ArrayList list=new ArrayList();
+if (null!=jsonArray&&jsonArray.length()>0) {
+	for (int i = 0; i < jsonArray.length(); i++) {
+		ModbusConfig modbusConfig=new ModbusConfig();
+	JSONObject json=jsonArray.getJSONObject(i);
+	modbusConfig.id = json.getString("id");
+	modbusConfig.slaveId = (byte)(json.getInt("slaveId"));
+		if (json.has("tcp")) {
+			JSONObject _tcp = json.getJSONObject("tcp");
+			modbusConfig.tcp = new ModbusTCPConfig();
+			modbusConfig.tcp.parse(_tcp);
+		} else if (json.has("serial")) {
+			JSONObject _serial = json.getJSONObject("serial");
+			modbusConfig.serial = new ModbusSerialConfig();
+			modbusConfig.serial.parse(_serial);
+		}
+		JSONArray array = json.getJSONArray("areas");
+		if (array != null) {
+			modbusConfig.areas = new ArrayList();
+			for (int ii = 0; ii < array.length(); ii++) {
+				ModbusArea modbusArea = new ModbusArea();
+				modbusArea.parse(array.getJSONObject(ii));
+				modbusConfig.areas.add(modbusArea);
+			}
+		}
+	
+		
+	list.add(modbusConfig);
+	}}
+return list;
 	}
 }

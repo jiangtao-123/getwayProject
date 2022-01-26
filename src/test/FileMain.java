@@ -7,8 +7,12 @@ import java.io.OutputStream;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
+import cn.dpi.edge.gateway.EdgeStudio;
+import cn.dpi.edge.gateway.api.ILog;
 import cn.dpi.edge.gateway.component.file.Client;
 import cn.dpi.edge.gateway.component.file.Config;
+import cn.dpi.edge.gateway.utils.streamUtil;
+import cn.dpi.edge.gateway.utils.threadUtil;
 
 public class FileMain {
 
@@ -56,18 +60,14 @@ public class FileMain {
 	}
 
 	public static void main(String[] args) throws IOException {
-		int a = 7;
-		int unit = 8;
-		System.out.println(((a-1)/unit)+1);
-		a = 8;
-		System.out.println(((a-1)/unit)+1);
-		a = 9;
-		System.out.println(((a-1)/unit)+1);
-		a = 15;
-		System.out.println(((a-1)/unit)+1);
-		a = 16;
-		System.out.println(((a-1)/unit)+1);
-		a = 17;
-		System.out.println(((a-1)/unit)+1);
+		byte[] data;
+		String json;
+		ILog log;// = new ConsoleLog();
+		System.out.println("read app config");
+		InputStream stream = EdgeStudio.class.getResourceAsStream("/MudbusConfig.json");
+		data = streamUtil.readToEnd(stream);
+		threadUtil.close(stream);
+		json = new String(data, "UTF-8");
+		System.out.println(json);
 	}
 }

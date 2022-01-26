@@ -10,7 +10,10 @@ public class APPConfig implements JSONSerializable {
 	public Config log;
 
 	public JSONObject toJson() throws JSONException {
-		return null;
+		JSONObject j=new JSONObject();
+		j.put("path", log.FilePath);
+		j.put("debug", log.Debug);
+		return j;
 	}
 
 	public void parse(JSONObject json) throws JSONException {

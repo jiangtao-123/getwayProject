@@ -26,7 +26,7 @@ public class HTTPTest {
 
 		try {
 			// 上电后需要等待一会，进行网络初始化等
-			Thread.sleep(20 * 1000);
+			Thread.sleep(1 * 1000);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}

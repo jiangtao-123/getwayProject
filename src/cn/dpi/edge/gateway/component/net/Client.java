@@ -28,6 +28,7 @@ public class Client extends ClientBase implements AutoCloseable {
 		if (this.connection == null || this.input == null || this.output == null) {
 			this.close();
 			String host = "socket://" + this.config.Address;
+			System.out.println("start>>>>>>>>>connection");
 			this.connection = (SocketConnection) Connector.open(host);
 			this.config.setConnection(connection);
 			this.input = connection.openInputStream();

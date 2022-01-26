@@ -7,10 +7,10 @@ public class arrayUtil {
 		}
 	}
 
-	public static void copy(byte[] src, int srcStart, byte[] des, int desStart) {
-		int length = des.length - desStart;
-		copy(src, srcStart, des, desStart, length);
-	}
+//	public static void copy(byte[] src, int srcStart, byte[] des, int desStart) {
+//		int length = des.length - desStart;
+//		copy(src, srcStart, des, desStart, length);
+//	}
 
 	public static byte[] clone(byte[] src, int srcStart, int length) {
 		byte[] temp = new byte[length];

@@ -1,39 +1,28 @@
-[
-	{
-		"id": "1",
-		"slaveId": 1,
-		"tcp": {
-			"address": "192.168.16.38:502"
-		},
-		"areas": [
-			{
-				"amount": 8,
-				"area": 1,
-				"start": 0,
-				"id": "1"
-			},
-			{
-				"amount": 8,
-				"area": 1,
-				"start": 8,
-				"id": "2"
-			}
-		]
+[{
+	"id": "1",
+	"slaveId": 1,
+	"tcp": {
+		"address": "192.168.10.105:502"
 	},
-	{
-		"id": "2",
-		"slaveId": 1,
-		"serial": {
-			"address": "COM0",
-			"baudrate": 9600
-		},
-		"areas": [
-			{
-				"id": "1",
-				"amount": 8,
-				"area": 1,
-				"start": 0
-			}
-		]
-	}
-]
+	"areas": [{
+		"amount": 1,
+		"area": 1,
+		"start": 0,
+		"id": "1"
+	}, {
+		"amount": 1,
+		"area": 2,
+		"start": 0,
+		"id": "2"
+	},{
+		"amount": 1,
+		"area": 3,
+		"start": 0,
+		"id": "1"
+	},{
+		"amount": 1,
+		"area": 4,
+		"start": 0,
+		"id": "1"
+	}]
+}]

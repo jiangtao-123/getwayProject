@@ -39,6 +39,7 @@ public class EdgeStudio {
 		threadUtil.close(stream);
 		json = new String(data, "UTF-8");
 		JSONArray array = new JSONArray(json);
+		System.out.println("MudbusConfig end>>>"+array.length());
 		for (int i = 0; i < array.length(); i++) {
 			ModbusConfig c = new ModbusConfig();
 			c.parse(array.getJSONObject(i));
@@ -46,6 +47,7 @@ public class EdgeStudio {
 			// 根据配置启动读取线程
 
 			String name = "thread-modbus-channel-" + c.id;
+			System.out.println("thread-modbus-channel-"+c.id);
 			Thread thread = new Thread(new ModbusTask(c, log), name);
 			thread.start();
 		}

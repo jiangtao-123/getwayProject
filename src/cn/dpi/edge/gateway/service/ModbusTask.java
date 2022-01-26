@@ -27,13 +27,16 @@ public class ModbusTask implements Runnable {
 				transport.connect();
 				IModbus modbus = Modbus.newModbus(this.config.slaveId, transport, codec);
 				byte[] data = null;
-				for (int i = 0; i < this.config.areas.length; i++) {
-					ModbusArea area = this.config.areas[i];
+				for (int i = 0; i < this.config.areas.size(); i++) {
+					ModbusArea area = (ModbusArea) this.config.areas.get(i);
+					System.out.println("area.area"+":"+area.area+"area.start:"+area.start+"area.amount:"+area.amount);
 					// 1:线圈 2:离散输入;3:保持寄存器;4:输入寄存器
 					switch (area.area) {
 					case 1:
 						// 线圈
+//						System.out.println("data>>>>");
 						data = modbus.ReadCoils(area.start, area.amount);
+//						System.out.println("read:"+area.area+">>>>>>>"+data.length);
 						break;
 					case 2:
 						// 离散输入
@@ -51,8 +54,12 @@ public class ModbusTask implements Runnable {
 					area.data = data;
 				}
 				// 输出
-				log.info("MODBUSDATA-" + this.config.toData().toString());
+				String s = this.config.toData().toString();
+				log.info("modebus-data-hh" + s);
+				System.out.println("MODBUSDATA-ERROR--"+s);
 			} catch (Throwable e) {
+				e.printStackTrace();
+				System.out.println("MODBUSDATA-ERROR");
 				log.debug(e.getMessage());
 				threadUtil.close(transport);
 				transport = null;

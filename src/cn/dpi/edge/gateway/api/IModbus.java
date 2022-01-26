@@ -1,5 +1,7 @@
 package cn.dpi.edge.gateway.api;
 
+import cn.dpi.edge.gateway.DataValue;
+
 public interface IModbus {
 
 	/**
@@ -46,4 +48,12 @@ public interface IModbus {
 	 * @throws Exception
 	 */
 	byte[] ReadInputRegisters(int address, int quantity) throws Exception;
+	/**
+	 * 
+	 * @param start
+	 * @param amount
+	 * @return
+	 * @throws Exception 
+	 */
+	DataValue ReadHoldingRegistersDataValue(int start, int amount) throws Exception;
 }

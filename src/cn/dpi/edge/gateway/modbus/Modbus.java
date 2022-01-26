@@ -1,5 +1,6 @@
 package cn.dpi.edge.gateway.modbus;
 
+import cn.dpi.edge.gateway.DataValue;
 import cn.dpi.edge.gateway.api.ICodec;
 import cn.dpi.edge.gateway.api.IModbus;
 import cn.dpi.edge.gateway.api.ITransport;
@@ -71,7 +72,7 @@ public class Modbus implements IModbus {
 					.responseError("modbus: response data size '" + length + "' does not match count '" + count + "'");
 		}
 		byte[] data = new byte[length];
-		arrayUtil.copy(response.Data, 1, data, 0);
+		arrayUtil.copy(response.Data, 1, data, 0,data.length);
 		return data;
 	}
 
@@ -91,7 +92,7 @@ public class Modbus implements IModbus {
 					.responseError("modbus: response data size '" + length + "' does not match count '" + count + "'");
 		}
 		byte[] data = new byte[length];
-		arrayUtil.copy(response.Data, 1, data, 0);
+		arrayUtil.copy(response.Data, 1, data, 0,data.length);
 		return data;
 	}
 
@@ -109,7 +110,7 @@ public class Modbus implements IModbus {
 					.responseError("modbus: response data size '" + length + "' does not match count '" + count + "'");
 		}
 		byte[] data = new byte[length];
-		arrayUtil.copy(response.Data, 1, data, 0);
+		arrayUtil.copy(response.Data, 1, data, 0,data.length);
 		return data;
 	}
 
@@ -129,7 +130,29 @@ public class Modbus implements IModbus {
 					.responseError("modbus: response data size '" + length + "' does not match count '" + count + "'");
 		}
 		byte[] data = new byte[length];
-		arrayUtil.copy(response.Data, 1, data, 0);
+		arrayUtil.copy(response.Data, 1, data, 0,data.length);
+		return data;
+	}
+/**
+ * 遥测数据解析；
+ * @throws Exception 
+ */
+	public DataValue ReadHoldingRegistersDataValue(int address, int quantity) throws Exception {
+		DataValue data=new DataValue();
+		if (quantity < 1 || quantity > 125) {
+			throw ModbusException.responseError("modbus: quantity '" + quantity + "' must be between '1' and '125'");
+		}
+		byte[] temp = dataBlock(address, quantity);
+		ModbusPDU request = ModbusPDU.newModbusPDU(ModbusFunctionCode.ReadHoldingRegisters, temp);
+		ModbusPDU response = this.send(request);
+		int count = (int) response.Data[0];
+		int length = response.Data.length - 1;
+		if (count != length) {
+			throw ModbusException
+					.responseError("modbus: response data size '" + length + "' does not match count '" + count + "'");
+		}
+		byte[] bytedata = new byte[length];
+		arrayUtil.copy(response.Data, 1, bytedata, 0,bytedata.length);
 		return data;
 	}
 }

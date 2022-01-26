@@ -28,9 +28,9 @@ public class ModbusTest {
 	}
 
 	private static ITransport tcpTest() {
-		String address = "192.168.16.38:502";
-		address = "127.0.0.1:8008";
-		TCPConfig config = new TCPConfig();
+		String address = "192.168.6.254:8008";
+		address = "127.0.0.1:502";
+		TCPConfig  config = new TCPConfig();
 		config.Address = address;
 		ITransport transport = TCPTransport.newTCPTransport(config, log);
 		return transport;
@@ -40,17 +40,22 @@ public class ModbusTest {
 		byte slaveID = 1;
 		ICodec codec;
 		ITransport transport;
-		// transport = tcpTest();
-		// codec = TCPCodec.newCodec();
-		transport = serialTest();
-		codec = RTUCodec.newCodec();
+		 transport = tcpTest();
+		 System.out.println(">>>>>>>>");
+		 codec = TCPCodec.newCodec();
+//		transport = serialTest();
+//		codec = RTUCodec.newCodec();
 		try {
 			transport.connect();
 			IModbus modbus = Modbus.newModbus(slaveID, transport, codec);
-			ReadCoils(modbus);
-			// ReadDiscreteInputs(modbus);
-			// ReadHoldingRegisters(modbus);
-			// ReadInputRegisters(modbus);
+			System.out.println("read Coils>>");
+			ReadCoils(modbus);//1do线圈
+			System.out.println("read Inputs>>");
+			 ReadDiscreteInputs(modbus);//
+			 System.out.println("read HoldingRegisters>>");
+			 ReadHoldingRegisters(modbus);//do遥信，遥测
+			 System.out.println("read InputRegisters>>");
+			 ReadInputRegisters(modbus);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		} finally {
@@ -59,7 +64,7 @@ public class ModbusTest {
 	}
 
 	private static void ReadCoils(IModbus modbus) throws Exception {
-		int start = 0, quantity = 8;
+		int start = 0, quantity = 8;//读取8个数据；
 		boolean[] coils = new boolean[quantity];
 		byte[] data = modbus.ReadCoils(start, quantity);
 		modbusUtil.readCoils(coils, data);
@@ -67,7 +72,11 @@ public class ModbusTest {
 			log.info(i + "---" + (coils[i]));
 		}
 	}
-
+/**
+ * 
+ * @param modbus
+ * @throws Exception
+ */
 	private static void ReadDiscreteInputs(IModbus modbus) throws Exception {
 		int start = 0, quantity = 2;
 		boolean[] coils = new boolean[quantity];
@@ -79,14 +88,23 @@ public class ModbusTest {
 	}
 
 	private static void ReadHoldingRegisters(IModbus modbus) throws Exception {
-		int start = 0, quantity = 2;
+		int start = 0, quantity = 10;
 		byte[] data = modbus.ReadHoldingRegisters(start, quantity);
+		boolean[] coils = new boolean[quantity];
+		modbusUtil.readCoils(coils, data);
+		for (int i = 0; i < coils.length; i++) {
+			log.info(i + "---" + (coils[i]));
+		}
 		System.out.println(stringUtil.format("{}", data));
 	}
 
 	private static void ReadInputRegisters(IModbus modbus) throws Exception {
-		int start = 0, quantity = 2;
+		int start = 0, quantity = 8;
 		byte[] data = modbus.ReadInputRegisters(start, quantity);
+		boolean[] coils = new boolean[quantity];
+		for (int i = 0; i < coils.length; i++) {
+			log.info(i + "---" + (coils[i]));
+		}
 		System.out.println(stringUtil.format("{}", data));
 	}
 }

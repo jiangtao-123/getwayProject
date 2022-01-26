@@ -41,7 +41,7 @@ public class streamUtil {
 				return arrayUtil.clone(data, 0, total);
 			}
 			byte[] t = new byte[data.length + cache];
-			arrayUtil.copy(data, 0, t, 0);
+			arrayUtil.copy(data, 0, t, 0,data.length);
 			data = t;
 		} while (true);
 	}

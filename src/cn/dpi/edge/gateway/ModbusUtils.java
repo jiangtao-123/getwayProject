@@ -34,7 +34,7 @@ import cn.dpi.edge.gateway.utils.file.FileUtils;
  *
  */
 public class ModbusUtils {
-	private APPConfig aPPConfig;// 缓存文件配置；
+	private APPConfig aPPConfig;// 日志文件配置；
 	private ArrayList modbusConfigList;// modbus配置文件
 	private ModbusConfig modbusConfig;// modbus配置文件；
 	private ILog log;

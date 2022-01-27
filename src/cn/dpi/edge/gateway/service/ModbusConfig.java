@@ -23,6 +23,8 @@ public class ModbusConfig implements JSONSerializable, DataConvert {
 	public ModbusTCPConfig tcp;
 	public ModbusSerialConfig serial;
 	public ArrayList areas;
+	public boolean bigEndian;//是否是大端
+	public int dataType;//哪种数据类型；1：int16,2：int32,3：float32
 ArrayList modbusConfigList=new ArrayList();
 	public static void main(String[] args) throws JSONException {
 		ModbusConfig c = new ModbusConfig();
@@ -140,6 +142,15 @@ if (null!=jsonArray&&jsonArray.length()>0) {
 		ModbusConfig modbusConfig=new ModbusConfig();
 	JSONObject json=jsonArray.getJSONObject(i);
 	modbusConfig.id = json.getString("id");
+	if (json.has("bigEndian")) {
+		modbusConfig.bigEndian=json.getBoolean("bigEndian");
+	}else{//默认是大端
+		modbusConfig.bigEndian=true;
+		
+	}
+	if (json.has("dataType")) {
+		modbusConfig.dataType=json.getInt("dataType");
+	}
 	modbusConfig.slaveId = (byte)(json.getInt("slaveId"));
 		if (json.has("tcp")) {
 			JSONObject _tcp = json.getJSONObject("tcp");

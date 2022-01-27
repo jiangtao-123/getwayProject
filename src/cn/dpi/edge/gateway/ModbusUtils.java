@@ -138,7 +138,7 @@ public class ModbusUtils {
 
 	private void InitConfig() {
 		try {
-			// 获取缓存配置信息；
+			// 获取日志配置信息；
 			setAppConfig();
 			// 获取modbus配置信息
 			setModbusConfig();

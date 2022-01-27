@@ -6,7 +6,7 @@ public class IecData {
 	private byte slaveId;// 设备ID；
 	private Integer type;// 读取类型；1:线圈 2:离散输入;3:保持寄存器;4:输入寄存器；
 	private DataVo data;// 读取数据；
-	private boolean change;
+	private boolean change = false;
 	private String index;
 
 	public DataVo getData() {

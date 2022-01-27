@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.bouncycastle.util.Arrays;
 import org.joshvm.util.ArrayList;
 import org.json.me.JSONArray;
 import org.json.me.JSONException;
@@ -110,6 +111,8 @@ public class ModbusUtils {
 			return null;
 		} else {
 			ModbusUtils.getInstance().setRead(false);// 释放读锁；
+			// 删除本次缓存文件；
+			// FileUtils.deleteFile(FileConstant.fileURI,FileConstant.fileName);
 			return dataTable;
 
 		}
@@ -205,32 +208,16 @@ public class ModbusUtils {
 						case 1:
 							// 线圈
 							data = modbus.ReadCoils(area.start, area.amount);
-							// d = HexUtils.getModbusData(data,
-							// modbusConfig.bigEndian, modbusConfig.dataType,
-							// d);
 							System.out.println(HexUtils.hexToInt(HexUtils.bytes2Hex(data)) + "><>PPPPPPP1");
 							break;
 						case 2:
 							// 离散输入
 							data = modbus.ReadDiscreteInputs(area.start, area.amount);
-							System.out.println(HexUtils.bytes2Hex(data) + "><>PPPPPPP2");
-							// System.out.println("hhhh");
 							break;
 						case 3:
 							// 保持寄存器
 							dataValue = new DataValue();
 							data = modbus.ReadHoldingRegisters(area.start, area.amount);
-							System.out.println(data.length + "LLLL");
-							for (int y = 0; y < data.length; y++) {
-								System.out.println(data[y] + "<><");
-							}
-							// float
-							System.out.println("float32:" + HexUtils.bytesToFloat(data, true) + "><>PPPPPPP3");
-							// int(int32)
-							System.out.println("int32:" + HexUtils.byteArrayToInt(data, true) + "><>PPPPPPP3");
-							// short(int16)
-							System.out.println("int16:" + HexUtils.byteArrayToShort(data, 0, true) + "><>PPPPPPP3");
-							dataValue = modbus.ReadHoldingRegistersDataValue(area.start, area.amount);
 							break;
 						case 4:
 							// 输入寄存器
@@ -239,54 +226,30 @@ public class ModbusUtils {
 							break;
 						}
 						d = HexUtils.getModbusData(data, modbusConfig.bigEndian, modbusConfig.dataType, d);
-						// area.data = data;
 						iecData.setData(d);
-						iecData.setType(new Integer(area.area));
-						// System.err.println("<><>"+data.length);
-						// iecData.setData(new Integer(byteArrayToInt(data)));
-						// System.out.println(byteArrayToInt(data)+">>>>>");
-						// iecData.setData(HexUtils.bytes2Hex(data));//转换成16进制；
-						// if (area.area==3) {
-						// System.out.println(HexUtils.bytes2Hex(data)+"><>PPPPPPP3");
-						// }
-						// System.out.println(HexUtils.bytes2Hex(data)+"><>PPPPPPP");
 						iecData.setSlaveId(modbusConfig.slaveId);
 						iecData.setIndex(modbusConfig.id);
-						// iecData.setIndex(modbusConfig.id);
-						// iecData.setChange(false);
 						list.add(iecData);
 					}
 					// 输出
-					String s = modbusConfig.toData().toString();
 					// 封装iec数据；
 					setIecData(modbusConfig.slaveId, list);
-					// System.out.println("end>>><"+modbusConfig.slaveId);
-					// 写入缓存文件；
-					// log.info("modebus-data-yyy:" + s);
-					// System.out.println("MODBUSDATA-DATA:"+s);
-					// 关闭流；
 					threadUtil.close(transport);
 					transport = null;
 					modbusConfig = null;
-					// 释放写锁；
-
 				} catch (Throwable e) {
 					e.printStackTrace();
-					System.out.println("MODBUSDATA-ERROR");
 					log.debug(e.getMessage());
 					threadUtil.close(transport);
 					transport = null;
 					modbusConfig = null;
 					ModbusUtils.getInstance().setWrite(false);
 				}
-				// threadUtil.sleep(5000);
-				// iecTable.put(key,list);
 				threadUtil.sleep(5000);
 			}
 		}
 		// 写入缓存文件；
 		writeFile();
-
 		ModbusUtils.getInstance().setWrite(false);// 释放写锁；
 	}
 
@@ -295,11 +258,9 @@ public class ModbusUtils {
 		try {
 
 			String str = parseToJson(ModbusUtils.getInstance().dataTable);
-			// System.out.println("KKKKKKKKKKK:"+str);
 			FileUtils.creatFile(FileConstant.fileURI, FileConstant.fileName,
 					/* System.currentTimeMillis()+ */str);
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 	}
@@ -311,7 +272,6 @@ public class ModbusUtils {
 			// System.out.println();
 			JSONObject jsonObject = new JSONObject();
 			jsonArray.put(jsonObject);
-
 			while (en.hasMoreElements()) {
 				Object key = (Object) en.nextElement();
 				JSONArray data = new JSONArray();
@@ -351,8 +311,6 @@ public class ModbusUtils {
 		if (this.checkData(((ArrayList) ModbusUtils.getInstance().getDataTable().get(slaveId + "")), list)) {
 			ModbusUtils.getInstance().getDataTable().put(slaveId + "", list);
 		}
-		// int d=byteArrayToInt(data);
-
 	}
 
 	/**
@@ -360,17 +318,32 @@ public class ModbusUtils {
 	 * 
 	 * @param oldList上一次数据；
 	 * @param newList最近一次数据；
-	 * @return
+	 * @return true有变化；
 	 */
 	private boolean checkData(ArrayList oldList, ArrayList newList) {
 		// TODO Auto-generated method stub
 		boolean flag = false;// 默认没有变化；
-		if (newList != null && oldList != null) {
+		if ((newList != null && newList.size() > 0) && (oldList != null && oldList.size() > 0)) {
 			if (newList.size() != oldList.size()) {
 				flag = true;
-			} else {
-
+			} else {// 比对两个list中对应对象属性值是否有变化以index匹配对象；
+				for (int i = 0; i < newList.size(); i++) {
+					IecData nd = (IecData) newList.get(i);
+					IecData od = null;
+					for (int j = 0; j < oldList.size(); j++) {
+						if (((IecData) oldList.get(j)).getIndex() == nd.getIndex()) {
+							od = (IecData) oldList.get(j);
+						}
+					}
+					if (chechIecDataChage(nd, od)) {
+						nd.setChange(true);// 设置本条数据已经改变；
+						flag = true;
+					}
+				}
 			}
+		} else {// 处理初始数据为空时，不做判定，直接存入；
+			flag = true;
+
 		}
 
 		return flag;
@@ -378,35 +351,83 @@ public class ModbusUtils {
 	}
 
 	/**
-	 * byte[]转int
+	 * 比较两次采集的数据是否有变化
 	 * 
-	 * @param bytes
-	 *            需要转换成int的数组
-	 * @return int值
+	 * @param nd
+	 * @param od
+	 * @return TRUE 有变化；
 	 */
-	public static int byteArrayToInt(byte[] bytes) {
-		int value = 0;
-		for (int i = 0; i < 4; i++) {
-			int shift = (3 - i) * 8;
-			value += (bytes[i] & 0xFF) << shift;
+	private boolean chechIecDataChage(IecData nd, IecData od) {
+		if (nd.getSlaveId() != od.getSlaveId()) {
+			return true;
+		} else if (nd.getType() != od.getType()) {
+			return true;
+		} else if (compareData(nd.getData(), od.getData())) {
+			return true;
 		}
-		return value;
+		return false;
 	}
 
 	/**
-	 * int到byte[] 由高位到低位
+	 * 比较采集的数据和上次是否有变化；
 	 * 
-	 * @param i
-	 *            需要转换为byte数组的整行值。
-	 * @return byte数组
+	 * @param nd
+	 * @param od
+	 * @return true有变化
 	 */
-	public static byte[] intToByteArray(int i) {
-		byte[] result = new byte[4];
-		result[0] = (byte) ((i >> 24) & 0xFF);
-		result[1] = (byte) ((i >> 16) & 0xFF);
-		result[2] = (byte) ((i >> 8) & 0xFF);
-		result[3] = (byte) (i & 0xFF);
-		return result;
+
+	private boolean compareData(DataVo nd, DataVo od) {
+		boolean flag = false;
+		if (null != nd && null != od) {
+			if (nd.getDataType() != od.getDataType()) {
+				flag = true;
+			}
+			// 比较从设备获取到的数据；
+			switch (nd.getDataType()) {
+			case 0:
+				flag = bytesCompare(nd.getByteData(), od.getByteData());
+				break;
+			case 1:
+				flag = (nd.getShortData() != od.getShortData());
+				break;
+			case 2:
+				flag = (nd.getFloatData() != od.getFloatData());
+				break;
+			default:
+				break;
+			}
+		} else {
+			flag = true;
+		}
+		return flag;
+	}
+
+	/**
+	 * 数组内容比较；
+	 * 
+	 * @param nd
+	 * @param od
+	 * @return true 有变化；
+	 */
+
+	private boolean bytesCompare(byte[] nd, byte[] od) {
+
+		boolean flag = false;
+		if ((nd != null && nd.length > 0) && (od != null && od.length > 0)) {
+			if (nd.length != od.length) {
+				flag = true;
+				return flag;
+			}
+			for (int i = 0; i < nd.length; i++) {
+				if (nd[i] != od[i]) {
+					flag = true;
+					break;
+				}
+			}
+		} else {
+			flag = true;
+		}
+		return flag;
 	}
 
 }

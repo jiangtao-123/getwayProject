@@ -34,16 +34,6 @@ import cn.dpi.edge.gateway.utils.file.FileUtils;
  *
  */
 public class ModbusUtils {
-	private static Hashtable dataTypeTable = new Hashtable();
-
-	static {
-		dataTypeTable.put("0", "byteArr");
-		dataTypeTable.put("1", "short");
-		dataTypeTable.put("2", "int");
-		dataTypeTable.put("3", "float");
-
-	}
-
 	private APPConfig aPPConfig;// 缓存文件配置；
 	private ArrayList modbusConfigList;// modbus配置文件
 	private ModbusConfig modbusConfig;// modbus配置文件；
@@ -93,14 +83,16 @@ public class ModbusUtils {
 	public static void main(String[] args) throws JSONException {
 		ModbusUtils.getInstance().start(true);
 	}
-/**
- * 是否线程启动；
- * @param thread
- */
-	public void start(boolean isthread){
+
+	/**
+	 * 是否线程启动；
+	 * 
+	 * @param thread
+	 */
+	public void start(boolean isthread) {
 		if (isthread) {
-			Thread thread=	new Thread(new Runnable() {
-				
+			Thread thread = new Thread(new Runnable() {
+
 				public void run() {
 					// TODO Auto-generated method stub
 					// 初始化配置文件；
@@ -113,17 +105,18 @@ public class ModbusUtils {
 				}
 			});
 			thread.start();
-		}else {
-			
-		
-		// 初始化配置文件；
-				ModbusUtils.getInstance().InitConfig();
-				do {
-					// 读取数据；
-					ModbusUtils.getInstance().getModbusData();
-					threadUtil.sleep(5000);// 休眠5S；
-				} while (true);
-	}}
+		} else {
+
+			// 初始化配置文件；
+			ModbusUtils.getInstance().InitConfig();
+			do {
+				// 读取数据；
+				ModbusUtils.getInstance().getModbusData();
+				threadUtil.sleep(5000);// 休眠5S；
+			} while (true);
+		}
+	}
+
 	/**
 	 * iec端获取modbus数据；
 	 * 

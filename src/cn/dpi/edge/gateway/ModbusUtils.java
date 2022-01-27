@@ -140,7 +140,6 @@ public class ModbusUtils {
 		try {
 			// 获取缓存配置信息；
 			setAppConfig();
-			// System.out.println("cg>>>>>");
 			// 获取modbus配置信息
 			setModbusConfig();
 
@@ -163,8 +162,6 @@ public class ModbusUtils {
 
 		threadUtil.close(stream);
 		json = new String(data, "UTF-8");
-		// System.out.println("><><><>>>>>"+json);
-		// modbusConfig=new ModbusConfig();
 		modbusConfigList = ModbusConfig.parse(new JSONArray(json));
 
 	}
@@ -174,7 +171,6 @@ public class ModbusUtils {
 		InputStream stream;
 		byte[] data;
 		String json;
-		// ILog log;// = new ConsoleLog();
 		System.out.println("read app config");
 		stream = EdgeStudio.class.getResourceAsStream("/app.json");
 		data = streamUtil.readToEnd(stream);
@@ -184,7 +180,6 @@ public class ModbusUtils {
 		aPPConfig.parse(new JSONObject(json));
 		Config logConfig = new Config();
 		logConfig.FilePath = aPPConfig.log.FilePath;
-		System.out.println("FilePath" + logConfig.FilePath + "<><><>>KKKKK");
 		log = FileLog.newFileLog(logConfig);
 		System.out.println("read app config end");
 
@@ -218,8 +213,6 @@ public class ModbusUtils {
 						IecData iecData = new IecData();
 						DataVo d = new DataVo();
 						ModbusArea area = (ModbusArea) modbusConfig.areas.get(i1);
-						System.out.println("area.area" + ":" + area.area + "area.start:" + area.start + "area.amount:"
-								+ area.amount + ">>>>>>");
 						// 1:线圈 2:离散输入;3:保持寄存器;4:输入寄存器
 						switch (area.area) {
 						case 1:

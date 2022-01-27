@@ -91,15 +91,39 @@ public class ModbusUtils {
 	}
 
 	public static void main(String[] args) throws JSONException {
-		// 初始化配置文件；
-		ModbusUtils.getInstance().InitConfig();
-		do {
-			// 读取数据；
-			ModbusUtils.getInstance().getModbusData();
-			threadUtil.sleep(5000);// 休眠5S；
-		} while (true);
+		ModbusUtils.getInstance().start(true);
 	}
-
+/**
+ * 是否线程启动；
+ * @param thread
+ */
+	public void start(boolean isthread){
+		if (isthread) {
+			Thread thread=	new Thread(new Runnable() {
+				
+				public void run() {
+					// TODO Auto-generated method stub
+					// 初始化配置文件；
+					ModbusUtils.getInstance().InitConfig();
+					do {
+						// 读取数据；
+						ModbusUtils.getInstance().getModbusData();
+						threadUtil.sleep(5000);// 休眠5S；
+					} while (true);
+				}
+			});
+			thread.start();
+		}else {
+			
+		
+		// 初始化配置文件；
+				ModbusUtils.getInstance().InitConfig();
+				do {
+					// 读取数据；
+					ModbusUtils.getInstance().getModbusData();
+					threadUtil.sleep(5000);// 休眠5S；
+				} while (true);
+	}}
 	/**
 	 * iec端获取modbus数据；
 	 * 

@@ -11,6 +11,7 @@ import cn.dpi.edge.gateway.modbus.RTUTransport;
 import cn.dpi.edge.gateway.modbus.TCPCodec;
 import cn.dpi.edge.gateway.modbus.TCPConfig;
 import cn.dpi.edge.gateway.modbus.TCPTransport;
+import cn.dpi.edge.gateway.utils.HexUtils;
 import cn.dpi.edge.gateway.utils.modbusUtil;
 import cn.dpi.edge.gateway.utils.stringUtil;
 import cn.dpi.edge.gateway.utils.threadUtil;
@@ -40,22 +41,22 @@ public class ModbusTest {
 		byte slaveID = 1;
 		ICodec codec;
 		ITransport transport;
-		 transport = tcpTest();
-		 System.out.println(">>>>>>>>");
-		 codec = TCPCodec.newCodec();
-//		transport = serialTest();
-//		codec = RTUCodec.newCodec();
+//		 transport = tcpTest();
+		 System.out.println("comTest>>>>>>>>");
+//		 codec = TCPCodec.newCodec();
+		transport = serialTest();
+		codec = RTUCodec.newCodec();
 		try {
 			transport.connect();
 			IModbus modbus = Modbus.newModbus(slaveID, transport, codec);
 			System.out.println("read Coils>>");
 			ReadCoils(modbus);//1do线圈
-			System.out.println("read Inputs>>");
-			 ReadDiscreteInputs(modbus);//
-			 System.out.println("read HoldingRegisters>>");
-			 ReadHoldingRegisters(modbus);//do遥信，遥测
-			 System.out.println("read InputRegisters>>");
-			 ReadInputRegisters(modbus);
+//			System.out.println("read Inputs>>");
+//			 ReadDiscreteInputs(modbus);//
+			 //System.out.println("read HoldingRegisters>>");
+			 //ReadHoldingRegisters(modbus);//do遥信，遥测
+//			 System.out.println("read InputRegisters>>");
+//			 ReadInputRegisters(modbus);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		} finally {
@@ -64,13 +65,16 @@ public class ModbusTest {
 	}
 
 	private static void ReadCoils(IModbus modbus) throws Exception {
-		int start = 0, quantity = 8;//读取8个数据；
+		int start = 0, quantity = 10;//读取10个数据；
 		boolean[] coils = new boolean[quantity];
+		System.out.println("read+>>>>");
 		byte[] data = modbus.ReadCoils(start, quantity);
+		System.out.println("KK<><>"+data.length+"vale:"+data[0]);
 		modbusUtil.readCoils(coils, data);
 		for (int i = 0; i < coils.length; i++) {
 			log.info(i + "---" + (coils[i]));
 		}
+		System.out.println(stringUtil.format("{}", data));
 	}
 /**
  * 
@@ -78,7 +82,7 @@ public class ModbusTest {
  * @throws Exception
  */
 	private static void ReadDiscreteInputs(IModbus modbus) throws Exception {
-		int start = 0, quantity = 2;
+		int start = 10, quantity = 10;
 		boolean[] coils = new boolean[quantity];
 		byte[] data = modbus.ReadDiscreteInputs(start, quantity);
 		modbusUtil.readCoils(coils, data);
@@ -88,8 +92,10 @@ public class ModbusTest {
 	}
 
 	private static void ReadHoldingRegisters(IModbus modbus) throws Exception {
-		int start = 0, quantity = 10;
+		int start = 10, quantity = 10;
 		byte[] data = modbus.ReadHoldingRegisters(start, quantity);
+		float n=HexUtils.bytesToFloat(data, true);
+		System.out.println("num+>>>"+n);
 		boolean[] coils = new boolean[quantity];
 		modbusUtil.readCoils(coils, data);
 		for (int i = 0; i < coils.length; i++) {
@@ -99,7 +105,7 @@ public class ModbusTest {
 	}
 
 	private static void ReadInputRegisters(IModbus modbus) throws Exception {
-		int start = 0, quantity = 8;
+		int start = 10, quantity = 10;
 		byte[] data = modbus.ReadInputRegisters(start, quantity);
 		boolean[] coils = new boolean[quantity];
 		for (int i = 0; i < coils.length; i++) {

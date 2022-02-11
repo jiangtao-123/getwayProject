@@ -10,7 +10,9 @@ public class FileConstant {
 	/*
 	 * 文件名
 	 */
-	public final static String fileName = "messageInfo.txt";
-	public final static String fileURI = "/Phone/";
+	public final static String tcpFileName = "tcpMessageInfo";
+	public final static String baseFileURI = "/Phone/";
+	public final static String rtuFileName = "rtuMessageInfo";
+	
 
 }

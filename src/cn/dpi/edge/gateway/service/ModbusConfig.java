@@ -23,9 +23,10 @@ public class ModbusConfig implements JSONSerializable, DataConvert {
 	public ModbusTCPConfig tcp;
 	public ModbusSerialConfig serial;
 	public ArrayList areas;
-	public boolean bigEndian;//是否是大端
-	public int dataType;//哪种数据类型；1：int16,2：int32,3：float32
-ArrayList modbusConfigList=new ArrayList();
+	public boolean bigEndian;// 是否是大端
+	public int dataType;// 哪种数据类型；1：int16,2：int32,3：float32
+	ArrayList modbusConfigList = new ArrayList();
+
 	public static void main(String[] args) throws JSONException {
 		ModbusConfig c = new ModbusConfig();
 		c.id = "1";
@@ -61,7 +62,7 @@ ArrayList modbusConfigList=new ArrayList();
 			for (int i = 0; i < areas.size(); i++) {
 				ModbusArea area = (ModbusArea) areas.get(i);
 				if (area != null) {
-					array.put(((ModbusArea)areas.get(i)).toJson());
+					array.put(((ModbusArea) areas.get(i)).toJson());
 				}
 			}
 			j.put("areas", array);
@@ -100,7 +101,7 @@ ArrayList modbusConfigList=new ArrayList();
 			for (int i = 0; i < areas.size(); i++) {
 				ModbusArea area = (ModbusArea) areas.get(i);
 				if (area != null) {
-					array.put(((ModbusArea)areas.get(i)).toData());
+					array.put(((ModbusArea) areas.get(i)).toData());
 				}
 			}
 			j.put("areas", array);
@@ -119,6 +120,7 @@ ArrayList modbusConfigList=new ArrayList();
 
 	public ITransport modbusTransport(ILog log) {
 		if (tcp != null) {
+			// System.out.println("tcp<<<<<<<123");
 			String address = this.tcp.address;
 			TCPConfig config = new TCPConfig();
 			config.Address = address;
@@ -136,44 +138,45 @@ ArrayList modbusConfigList=new ArrayList();
 
 	public static ArrayList parse(JSONArray jsonArray) throws JSONException {
 		// TODO Auto-generated method stub
-		ArrayList list=new ArrayList();
-if (null!=jsonArray&&jsonArray.length()>0) {
-	for (int i = 0; i < jsonArray.length(); i++) {
-		ModbusConfig modbusConfig=new ModbusConfig();
-	JSONObject json=jsonArray.getJSONObject(i);
-	modbusConfig.id = json.getString("id");
-	if (json.has("bigEndian")) {
-		modbusConfig.bigEndian=json.getBoolean("bigEndian");
-	}else{//默认是大端
-		modbusConfig.bigEndian=true;
-		
-	}
-	if (json.has("dataType")) {
-		modbusConfig.dataType=json.getInt("dataType");
-	}
-	modbusConfig.slaveId = (byte)(json.getInt("slaveId"));
-		if (json.has("tcp")) {
-			JSONObject _tcp = json.getJSONObject("tcp");
-			modbusConfig.tcp = new ModbusTCPConfig();
-			modbusConfig.tcp.parse(_tcp);
-		} else if (json.has("serial")) {
-			JSONObject _serial = json.getJSONObject("serial");
-			modbusConfig.serial = new ModbusSerialConfig();
-			modbusConfig.serial.parse(_serial);
-		}
-		JSONArray array = json.getJSONArray("areas");
-		if (array != null) {
-			modbusConfig.areas = new ArrayList();
-			for (int ii = 0; ii < array.length(); ii++) {
-				ModbusArea modbusArea = new ModbusArea();
-				modbusArea.parse(array.getJSONObject(ii));
-				modbusConfig.areas.add(modbusArea);
+		ArrayList list = new ArrayList();
+		if (null != jsonArray && jsonArray.length() > 0) {
+			for (int i = 0; i < jsonArray.length(); i++) {
+				ModbusConfig modbusConfig = new ModbusConfig();
+				JSONObject json = jsonArray.getJSONObject(i);
+				modbusConfig.id = json.getString("id");
+				// if (json.has("bigEndian")) {
+				// modbusConfig.bigEndian=json.getBoolean("bigEndian");
+				// }else{//默认是大端
+				// modbusConfig.bigEndian=true;
+				//
+				// }
+				// if (json.has("dataType")) {
+				// modbusConfig.dataType=json.getInt("dataType");
+				// }
+				modbusConfig.slaveId = (byte) (json.getInt("id"));
+
+				if (json.has("tcp")) {
+					JSONObject _tcp = json.getJSONObject("tcp");
+					modbusConfig.tcp = new ModbusTCPConfig();
+					modbusConfig.tcp.parse(_tcp);
+				} else if (json.has("serial")) {
+					JSONObject _serial = json.getJSONObject("serial");
+					modbusConfig.serial = new ModbusSerialConfig();
+					modbusConfig.serial.parse(_serial);
+				}
+				JSONArray array = json.getJSONArray("areas");
+				if (array != null) {
+					modbusConfig.areas = new ArrayList();
+					for (int ii = 0; ii < array.length(); ii++) {
+						ModbusArea modbusArea = new ModbusArea();
+						modbusArea.parse(array.getJSONObject(ii));
+						modbusConfig.areas.add(modbusArea);
+					}
+				}
+
+				list.add(modbusConfig);
 			}
 		}
-	
-		
-	list.add(modbusConfig);
-	}}
-return list;
+		return list;
 	}
 }

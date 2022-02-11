@@ -20,7 +20,7 @@ public class RTUCodec extends ModbusCodec {
 
 	public byte[] encode(ModbusPDU pdu, byte slaveID) {
 		int length = pdu.Data.length + 4;
-
+System.out.println("encode>>>>>>>");
 		if (length > rtuMaxSize) {
 			throw ModbusException.responseError(
 					"modbus: length of data '" + length + "' must not be bigger than '" + rtuMaxSize + "'");

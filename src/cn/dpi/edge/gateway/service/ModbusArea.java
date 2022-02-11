@@ -16,6 +16,9 @@ public class ModbusArea implements JSONSerializable, DataConvert {
 	public int start;
 	public int amount;
 	public byte[] data;
+	public byte slaveId;
+	public boolean bigEndian;//是否是大端
+	public int dataType;//哪种数据类型；1：int16,2：int32,3：float32
 
 	public JSONObject toJson() throws JSONException {
 		JSONObject j = new JSONObject();
@@ -31,6 +34,19 @@ public class ModbusArea implements JSONSerializable, DataConvert {
 		this.area = json.getInt("area");
 		this.start = json.getInt("start");
 		this.amount = json.getInt("amount");
+		if (json.has("slaveId")) {
+			this.slaveId=(byte) json.getInt("slaveId");
+			
+		}
+		if (json.has("bigEndian")) {
+			this.bigEndian=json.getBoolean("bigEndian");
+		}else{//默认是大端
+			this.bigEndian=true;
+			
+		}
+		if (json.has("dataType")) {
+			this.dataType=json.getInt("dataType");
+		}
 	}
 
 	public JSONObject toData() throws JSONException {

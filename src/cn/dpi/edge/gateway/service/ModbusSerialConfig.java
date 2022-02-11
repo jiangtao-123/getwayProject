@@ -28,13 +28,34 @@ public class ModbusSerialConfig implements JSONSerializable {
 	}
 
 	public void parse(JSONObject j) throws JSONException {
-		this.address = j.getString("address");
-		this.baudrate = j.getInt("baudrate");
-		this.dataBits = j.getInt("dataBits");
-		this.stopBits = j.getInt("stopBits");
-		this.parity = j.getString("parity");
-		this.blocking = j.getString("blocking");
-		this.autocts = j.getString("autocts");
+		if (j.has("address")) {
+
+			this.address = j.getString("address");
+		}
+		if (j.has("baudrate")) {
+
+			this.baudrate = j.getInt("baudrate");
+		}
+		if (j.has("dataBits")) {
+
+			this.dataBits = j.getInt("dataBits");
+		}
+		if (j.has("stopBits")) {
+
+			this.stopBits = j.getInt("stopBits");
+		}
+		if (j.has("parity")) {
+
+			this.parity = j.getString("parity");
+		}
+		if (j.has("blocking")) {
+
+			this.blocking = j.getString("blocking");
+		}
+		if (j.has("autocts")) {
+
+			this.autocts = j.getString("autocts");
+		}
 	}
 
 }

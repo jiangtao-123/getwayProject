@@ -53,6 +53,7 @@ public class RTUTransport implements ITransport {
 	}
 
 	public void connect() throws Exception {
+//		System.out.println("com>>>>>>connect+rtu");
 		if (this.state == States.Starting || this.state == States.Started) {
 			return;
 		}

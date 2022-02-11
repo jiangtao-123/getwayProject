@@ -31,8 +31,11 @@ public class Modbus implements IModbus {
 	 */
 	public ModbusPDU send(ModbusPDU request) throws Exception {
 		ModbusPDU pdu = null;
+		System.out.println("1>");
 		byte[] aduRequest = this.codec.encode(request, this.slaveID);
+		System.out.println("2>"+aduRequest.length);
 		byte[] aduResponse = this.transport.send(aduRequest);
+		System.out.println("received>"+aduResponse.length);
 		this.codec.verify(aduRequest, aduResponse);
 		pdu = this.codec.decode(aduResponse);
 		// Check correct function code returned (exception)
@@ -63,8 +66,9 @@ public class Modbus implements IModbus {
 
 		byte[] temp = dataBlock(address, quantity);
 		ModbusPDU request = ModbusPDU.newModbusPDU(ModbusFunctionCode.ReadCoils, temp);
-
+System.out.println("PPPPWE1");
 		ModbusPDU response = this.send(request);
+		System.out.println("LPLP>>>");
 		int count = (int) response.Data[0];
 		int length = response.Data.length - 1;
 		if (count != length) {

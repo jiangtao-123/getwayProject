@@ -1,0 +1,41 @@
+[{
+	"id": 1,
+	"serial": {
+		"address": "COM0",
+		"baudrate":9600
+		
+	},
+	"areas": [{
+		"slaveId": 1,
+		"amount": 1,
+		"area": 1,
+		"start": 0,
+		"id": "1",
+		"bigEndian":true,
+		"dataType":2
+	}, {
+	    "slaveId": 1,
+		"amount": 1,
+		"area": 2,
+		"start": 0,
+		"id": "2",
+		"bigEndian":true,
+		"dataType":1
+	},{
+	   "slaveId": 1,
+		"amount": 2,
+		"area": 3,
+		"start": 0,
+		"id": "3",
+		"bigEndian":true,
+		"dataType":1
+	},{
+	    "slaveId": 1,
+		"amount": 1,
+		"area": 4,
+		"start": 0,
+		"id": "4",
+		"bigEndian":true,
+		"dataType":1
+	}]
+}]

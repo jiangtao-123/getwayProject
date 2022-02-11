@@ -279,4 +279,17 @@ public class HexUtils {
 		result[3] = (byte) (i & 0xFF);
 		return result;
 	}
+//	/**
+//	 * 十六进制字符串转10进制；
+//	 * @param hexstr
+//	 * @return
+//	 */
+//	public static float HexToFloat(String hexstr){
+//		//十六进制字符串转float
+////		 ="BD45F77B";
+////		 Long l = new Long(Long.parseLong(hexstr, 16));
+////		 Float f = Float.intBitsToFloat(l.intValue());
+////		 System.out.println(f);
+//				
+//	}
 }

@@ -2,6 +2,8 @@ package cn.dpi.edge.gateway;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -28,7 +30,7 @@ import cn.dpi.edge.gateway.utils.file.FileConstant;
 import cn.dpi.edge.gateway.utils.file.FileUtils;
 
 /**
- * 获取modbus硬件数据；
+ * tcp连接获取modbus硬件数据；
  * 
  * @author jiangtao
  *
@@ -43,27 +45,27 @@ public class ModbusUtils {
 	private boolean read = false;
 	private boolean write = false;
 
-	public boolean isRead() {
+	private boolean isRead() {
 		return read;
 	}
 
-	public void setRead(boolean read) {
+	private void setRead(boolean read) {
 		this.read = read;
 	}
 
-	public boolean isWrite() {
+	private boolean isWrite() {
 		return write;
 	}
 
-	public void setWrite(boolean write) {
+	private void setWrite(boolean write) {
 		this.write = write;
 	}
 
-	public Hashtable getDataTable() {
+	private Hashtable getDataTable() {
 		return dataTable;
 	}
 
-	public void setDataTable(Hashtable iecTable) {
+	private void setDataTable(Hashtable iecTable) {
 		this.dataTable = iecTable;
 	}
 
@@ -100,7 +102,7 @@ public class ModbusUtils {
 					do {
 						// 读取数据；
 						ModbusUtils.getInstance().getModbusData();
-						threadUtil.sleep(5000);// 休眠5S；
+						threadUtil.sleep(500);// 休眠5S；
 					} while (true);
 				}
 			});
@@ -112,7 +114,7 @@ public class ModbusUtils {
 			do {
 				// 读取数据；
 				ModbusUtils.getInstance().getModbusData();
-				threadUtil.sleep(5000);// 休眠5S；
+				threadUtil.sleep(500);// 休眠5S；
 			} while (true);
 		}
 	}
@@ -162,6 +164,7 @@ public class ModbusUtils {
 
 		threadUtil.close(stream);
 		json = new String(data, "UTF-8");
+//		System.out.println("<<>"+json);
 		modbusConfigList = ModbusConfig.parse(new JSONArray(json));
 
 	}
@@ -191,7 +194,8 @@ public class ModbusUtils {
 	public synchronized void getModbusData() {
 		if (ModbusUtils.getInstance().read) {
 			return;
-			// Thread.sleep(millis);
+//			 Thread.sleep(500);
+			
 		}
 		// 写加锁
 		ModbusUtils.getInstance().setWrite(true);
@@ -205,7 +209,7 @@ public class ModbusUtils {
 					}
 					ICodec codec = modbusConfig.modbusCodec();
 					transport.connect();
-					IModbus modbus = Modbus.newModbus(modbusConfig.slaveId, transport, codec);
+					IModbus modbus = null;//Modbus.newModbus(modbusConfig.slaveId, transport, codec);
 					byte[] data = null;
 					DataValue dataValue = null;
 					ArrayList list = new ArrayList();
@@ -213,12 +217,13 @@ public class ModbusUtils {
 						IecData iecData = new IecData();
 						DataVo d = new DataVo();
 						ModbusArea area = (ModbusArea) modbusConfig.areas.get(i1);
+						 modbus = Modbus.newModbus(area.slaveId, transport, codec);
 						// 1:线圈 2:离散输入;3:保持寄存器;4:输入寄存器
 						switch (area.area) {
 						case 1:
 							// 线圈
 							data = modbus.ReadCoils(area.start, area.amount);
-							System.out.println(HexUtils.hexToInt(HexUtils.bytes2Hex(data)) + "><>PPPPPPP1");
+//							System.out.println(HexUtils.hexToInt(HexUtils.bytes2Hex(data)) + "><>PPPPPPP1");
 							break;
 						case 2:
 							// 离散输入
@@ -232,7 +237,7 @@ public class ModbusUtils {
 						case 4:
 							// 输入寄存器
 							data = modbus.ReadInputRegisters(area.start, area.amount);
-							System.out.println(HexUtils.bytes2Hex(data) + "><>PPPPPPP4");
+//							System.out.println(HexUtils.bytes2Hex(data) + "><>PPPPPPP4");
 							break;
 						}
 						d = HexUtils.getModbusData(data, modbusConfig.bigEndian, modbusConfig.dataType, d);
@@ -268,11 +273,35 @@ public class ModbusUtils {
 		try {
 
 			String str = parseToJson(ModbusUtils.getInstance().dataTable);
-			FileUtils.creatFile(FileConstant.fileURI, FileConstant.fileName,
+			FileUtils.creatFile(FileConstant.baseFileURI, FileConstant.tcpFileName+getDate(new Date())+".txt",
 					/* System.currentTimeMillis()+ */str);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private String getDate(Date date) {
+		// TODO Auto-generated method stub
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(date);
+
+		StringBuffer buffer = new StringBuffer();		
+
+		buffer.append(ca.get(Calendar.YEAR)+"-");
+
+		buffer.append((ca.get(Calendar.MONTH)+1)+"-");
+
+		buffer.append(ca.get(Calendar.DAY_OF_MONTH));
+		//追加时分秒；
+//
+//		buffer.append(ca.get(Calendar.HOUR_OF_DAY)+":");
+//
+//		buffer.append(ca.get(Calendar.MINUTE)+":");
+//
+//		buffer.append(ca.get(Calendar.SECOND));
+
+		return buffer.toString();
+		
 	}
 
 	private String parseToJson(Hashtable iecTable) throws JSONException {

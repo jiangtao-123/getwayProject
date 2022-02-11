@@ -47,6 +47,7 @@ public class TCPTransport implements ITransport {
 	}
 
 	public void connect() throws Exception {
+//		System.out.println("connecttcp>>>>>");
 		if (this.state == States.Starting || this.state == States.Started) {
 			return;
 		}

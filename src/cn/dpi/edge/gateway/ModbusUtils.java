@@ -242,8 +242,8 @@ public class ModbusUtils {
 						}
 						d = HexUtils.getModbusData(data, area.bigEndian, area.dataType, d);
 						iecData.setData(d);
-						iecData.setSlaveId(modbusConfig.slaveId);
-						iecData.setIndex(modbusConfig.id);
+						iecData.setSlaveId(area.slaveId);
+						iecData.setIndex(area.id);
 						list.add(iecData);
 					}
 					// 输出

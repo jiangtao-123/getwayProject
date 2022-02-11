@@ -240,7 +240,7 @@ public class RtuModbusUtils {
 							// "><>PPPPPPP4");
 							break;
 						}
-						d = HexUtils.getModbusData(data, modbusConfig.bigEndian, modbusConfig.dataType, d);
+						d = HexUtils.getModbusData(data, area.bigEndian, area.dataType, d);
 						iecData.setData(d);
 						iecData.setSlaveId(modbusConfig.slaveId);
 						iecData.setIndex(modbusConfig.id);
@@ -260,7 +260,7 @@ public class RtuModbusUtils {
 					modbusConfig = null;
 					RtuModbusUtils.getInstance().setWrite(false);
 				}
-				threadUtil.sleep(5000);
+				threadUtil.sleep(500);
 			}
 		}
 		// 写入缓存文件；

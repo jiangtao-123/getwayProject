@@ -127,6 +127,7 @@ public class ModbusUtils {
 	public synchronized Hashtable getDataHashtable() {
 		ModbusUtils.getInstance().setRead(true);// 加读锁；
 		if (ModbusUtils.getInstance().write) {
+			ModbusUtils.getInstance().setRead(false);// 释放读锁；
 			return null;
 		} else {
 			ModbusUtils.getInstance().setRead(false);// 释放读锁；
